@@ -1,5 +1,7 @@
 ﻿using System;
 
+#pragma warning disable CA1062
+
 namespace LookingForArrayElementsRecursion
 {
     public static class IntegersCounter
@@ -12,8 +14,32 @@ namespace LookingForArrayElementsRecursion
         /// <returns>The number of occurrences of the elements that are in <paramref name="elementsToSearchFor"/> <see cref="Array"/>.</returns>
         public static int GetIntegersCount(int[] arrayToSearch, int[] elementsToSearchFor)
         {
-            // TODO #1. Implement the method using recursion.
-            throw new NotImplementedException();
+            // #1. Implement the method using recursion.
+            if (elementsToSearchFor is null)
+            {
+                throw new ArgumentNullException(nameof(elementsToSearchFor));
+            }
+
+            if (arrayToSearch is null)
+            {
+                throw new ArgumentNullException(nameof(arrayToSearch));
+            }
+
+            if (elementsToSearchFor.Length == 0)
+            {
+                return 0;
+            }
+
+            int count = 0;
+            for (int i = 0; i < arrayToSearch.Length; i++)
+            {
+                if (elementsToSearchFor[^1] == arrayToSearch[i])
+                {
+                    count++;
+                }
+            }
+
+            return GetIntegersCount(arrayToSearch, elementsToSearchFor[..^1]) + count;
         }
 
         /// <summary>
@@ -26,8 +52,57 @@ namespace LookingForArrayElementsRecursion
         /// <returns>The number of occurrences of the elements that are in <paramref name="elementsToSearchFor"/> <see cref="Array"/>.</returns>
         public static int GetIntegersCount(int[] arrayToSearch, int[] elementsToSearchFor, int startIndex, int count)
         {
-            // TODO #2. Implement the method using recursion.
-            throw new NotImplementedException();
+            // #2. Implement the method using recursion.
+            CheckExceptions(arrayToSearch, elementsToSearchFor, startIndex, count);
+
+            if (elementsToSearchFor.Length == 0)
+            {
+                return 0;
+            }
+
+            int cnt = 0;
+            for (int i = startIndex; i < startIndex + count; i++)
+            {
+                if (elementsToSearchFor[^1] == arrayToSearch[i])
+                {
+                    cnt++;
+                }
+            }
+
+            return GetIntegersCount(arrayToSearch, elementsToSearchFor[..^1], startIndex, count) + cnt;
+        }
+
+        private static void CheckExceptions(int[] arrayToSearch, int[] elementsToSearchFor, int startIndex, int count)
+        {
+            if (elementsToSearchFor is null)
+            {
+                throw new ArgumentNullException(nameof(elementsToSearchFor));
+            }
+
+            if (arrayToSearch is null)
+            {
+                throw new ArgumentNullException(nameof(arrayToSearch));
+            }
+
+            if (startIndex < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex), "startIndex is less than zero");
+            }
+
+            if (startIndex > arrayToSearch.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex), "startIndex is greater or equals arrayToSearch.Length");
+            }
+
+            if (count < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(count), "count is less than zero");
+            }
+
+            if (startIndex + count > arrayToSearch.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(count), "startIndex + count > arrayToSearch.Length");
+            }
         }
     }
 }
